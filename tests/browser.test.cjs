@@ -1,13 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const { chromium } = require('/Users/arnelangner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const playwrightModule = process.env.PLAYWRIGHT_MODULE || 'playwright';
+const { chromium } = require(playwrightModule);
 
 const baseUrl = process.argv[2] || 'http://127.0.0.1:8765';
 const outputDir = path.resolve(process.argv[3] || './qa');
 
 (async () => {
   fs.mkdirSync(outputDir, { recursive: true });
-  const browser = await chromium.launch({ headless: true, executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' });
+  const launchOptions = { headless: true };
+  if (process.env.CHROME_EXECUTABLE) launchOptions.executablePath = process.env.CHROME_EXECUTABLE;
+  const browser = await chromium.launch(launchOptions);
   const page = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
   const errors = [];
   page.on('console', message => {
