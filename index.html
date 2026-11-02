@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="description" content="Offline-Lernwebsite für sechs deutschsprachige Kinderbuchklassiker">
+  <link rel="icon" href="data:,">
   <title>Klassiker lesen · Förderzyklus</title>
   <style>
     :root {
@@ -117,7 +118,7 @@
     const showModule=(id)=>{currentWork=WORKS.find(w=>w.id===id);setAccent(currentWork);document.querySelector("#module-title").textContent=currentWork.title;document.querySelector("#module-tagline").textContent=currentWork.tagline;activateView(moduleView);currentSection="hearing";renderSection();window.scrollTo({top:0,behavior:"instant"})};
     const makeQuizState=w=>({page:0,global:null,details:Array(5).fill(null),sequence:shuffle(w.quiz.sequence),inference:[null,null],openText:"",self:null,objectiveReady:false,complete:false,scores:null});
     const qs=()=>quizStates[currentWork.id]||(quizStates[currentWork.id]=makeQuizState(currentWork));
-    const renderHome=()=>{document.querySelector("#module-grid").innerHTML=WORKS.map(w=>`<article class="module-card" style="--card-accent:${w.accent};--card-soft:${w.accent_soft}"><div class="module-index">Stunde ${w.number} von 6</div><h2>${esc(w.title)}</h2><p class="author">${esc(w.author)}</p><button type="button" data-work="${w.id}">Stunde beginnen</button></article>`).join("");document.querySelectorAll("[data-work]").forEach(b=>b.addEventListener("click",()=>showModule(b.dataset.work)))};
+    const renderHome=()=>{const lessons=WORKS.map(w=>`<article class="module-card" style="--card-accent:${w.accent};--card-soft:${w.accent_soft}"><div class="module-index">Stunde ${w.number} von 6</div><h2>${esc(w.title)}</h2><p class="author">${esc(w.author)}</p><button type="button" data-work="${w.id}">Stunde beginnen</button></article>`).join("");const finalCheck=`<article class="module-card" style="--card-accent:#5E5CE6;--card-soft:#EDEDFF"><div class="module-index">Nach Stunde 6 · etwa 20 Minuten</div><h2>Abschlusscheck</h2><p class="author">Lesesicherheit &amp; Wortbedeutungen</p><button type="button" data-final-check>Abschlusscheck öffnen</button></article>`;document.querySelector("#module-grid").innerHTML=lessons+finalCheck;document.querySelectorAll("[data-work]").forEach(b=>b.addEventListener("click",()=>showModule(b.dataset.work)));document.querySelector("[data-final-check]").addEventListener("click",()=>{window.location.href="abschluss.html"})};
     let teacherAuthorized=false;
     const hasTeacherAccess=()=>{try{return teacherAuthorized||sessionStorage.getItem("klassiker-teacher-access")==="1"}catch{return teacherAuthorized}};
     const setTeacherAccess=value=>{teacherAuthorized=value;try{value?sessionStorage.setItem("klassiker-teacher-access","1"):sessionStorage.removeItem("klassiker-teacher-access")}catch{}}
